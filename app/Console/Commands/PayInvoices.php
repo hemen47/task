@@ -3,8 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Invoice;
-use App\Classes\Helper;
-use App\Classes\Payment;
+use App\Classes\MasterController;
 use Illuminate\Console\Command;
 
 class PayInvoices extends Command
@@ -39,24 +38,13 @@ class PayInvoices extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(MasterController $helper)
     {
 
-        $unpaidInvoices = Invoice::where('paid', false)->with('receiver')->get();
+        $results = $helper->payInvoices();
 
-
-        if (empty($unpaidInvoices[0])) {
-            $this->info("No unpaid invoices was found!");
-        } else {
-
-            $bar = $this->output->createProgressBar(count($unpaidInvoices));
-
-            foreach ($unpaidInvoices as $unpaidInvoice) {
-                $this->info(Payment::pay($unpaidInvoice->receiver->sheba, $unpaidInvoice->amount, $lang ="en"));
-                $unpaidInvoice->update(['paid' => "1"]);
-                $bar->advance();
-            };
-            $bar->finish();
+        foreach ($results as $result){
+            $this->info($result);
         }
 
     }

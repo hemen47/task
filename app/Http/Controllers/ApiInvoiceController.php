@@ -45,26 +45,10 @@ class ApiInvoiceController extends BaseController
     public function payInvoices(MasterController $helper)
 
     {
-
-        $Invoices = Invoice::where('paid', false)->with('receiver')->get();
-        $meli=[];
-        $melat=[];
-
-        foreach ($Invoices as $key => $Invoice) {
-            $trim = substr($Invoice->receiver->sheba, 2, -19);
-            if ($trim == "00000") {
-                array_push($meli,$Invoice->id);
-
-            } else if ($trim == "11111"){
-                array_push($melat,$Invoice->id);
-        }else {
-                return "invalid sheba";
-            }
-        }
-
+        $results = $helper->payInvoices();
         return response()->json([
-            "meli" => $meli,
-            "melat" => $melat
+            "results" => $results,
+
         ], 200);
     }
 }

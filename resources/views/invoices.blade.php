@@ -1,6 +1,9 @@
 @extends('master')
 
 @section('content')
+    <div class="text-center mb-3">
+        <a href="/">برای ثبت فاکتور جدید اینجا را کلیک کنید</a>
+    </div>
     <div class="text-center">
         <button class="btn btn-primary">
             <a class="text-white" href="http://127.0.0.1:8000/invoices">کل فاکتورها</a>
@@ -53,10 +56,12 @@
         </div>
 
 
-        @if (Session::has('results'))
+        @if (Session::has('results') )
+
             @foreach(Session::get('results') as $result)
             <div class="alert alert-success mt-4">{{ $result }}</div>
             @endforeach
+
         @endif
 
 

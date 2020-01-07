@@ -34,7 +34,7 @@ class InvoiceController extends BaseController
     }
 
 
-    public function payInvoices ( MasterController $helper){
+    public function payInvoices (MasterController $helper){
 
         $results = $helper->payInvoices();
         session()->flash('results', $results);

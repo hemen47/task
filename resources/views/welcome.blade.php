@@ -1,6 +1,9 @@
 @extends('master')
 
 @section('content')
+    <div class="text-center mb-3">
+        <a href="/invoices">برای مشاهده ی فاکتورها اینجا را کلیک کنید</a>
+    </div>
     <form action="/save" method="post" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
@@ -24,6 +27,7 @@
         <button type="submit" class="btn btn-primary">ارسال فاکتور</button>
 
     </form>
+
 
     @if (Session::has('msg'))
         <div class="alert alert-success mt-4">{{ Session::get('msg') }}</div>

@@ -39,26 +39,29 @@ class MasterController
     }
 
 
-    public function payInvoices()
-    {
+    public function payInvoices(){
 
+        $Invoices = Invoice::where('paid', false)->with('receiver')->get();
+        $checkedResults = BankApi::checkBank($Invoices);
 
+        if($checkedResults == "invalid sheba") {
+            return response()->json([
+                "msg" => "one of the sheba account numbers is not valid"
+            ], 200);
+        };
 
-//        $results = [];
-//
-//        foreach ($unpaidInvoices as $unpaidInvoice) {
-//            $paid = BankApi::pay($unpaidInvoice->receiver->sheba, $unpaidInvoice->amount, $lang="fa");
-//            array_push($results, $paid);
-//            $unpaidInvoice->update(['paid' => "1"]);
-//        };
-//
-//        if (empty($results)) {
-//            return $results = [0 => "هیچ فاکتوری پرداخت نشده ای وجود ندارد!"];
-//        }else {
-//
-//         return $results;
-//        }
-        return null;
+        $meliInvoices = Invoice::with('receiver')->find($checkedResults["meli"]);
+        $melatInvoices = Invoice::with('receiver')->find($checkedResults["melat"]);
+
+        $meliPaidResults = bankApi::meli($meliInvoices);
+        $melatPaidResults = bankApi::melat($melatInvoices);
+
+        if(!empty($meliPaidResults) || !empty($melatPaidResults) ){
+
+        return array_merge($meliPaidResults, $melatPaidResults);
+        } else{
+            return ["there are no unpaid factors left"];
+            }
     }
 
 
