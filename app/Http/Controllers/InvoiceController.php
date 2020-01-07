@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\Helper;
-use App\Classes\Payment;
+use App\Classes\MasterController;
+use App\Classes\BankApi;
 use App\Receiver;
 use App\Invoice;
 use Illuminate\Http\Request;
@@ -19,22 +19,22 @@ class InvoiceController extends BaseController
     }
 
 
-    public function showInvoices (Request $request, Helper $helper){
+    public function showInvoices (Request $request, MasterController $helper){
         $results = $helper->showInvoices($request);
         return view("invoices")->with('data', $results);
     }
 
 
-    public function saveInvoice (Request $request, Helper $helper)
+    public function saveInvoice (Request $request, MasterController $helper)
     {
-        $helper->create($request);
+        $helper->saveInvoice($request);
         session()->flash('msg', "با موفقیت ثبت شد");
         return redirect()->back();
 
     }
 
 
-    public function payInvoices ( Helper $helper){
+    public function payInvoices ( MasterController $helper){
 
         $results = $helper->payInvoices();
         session()->flash('results', $results);

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\Helper;
-use App\Classes\Payment;
+use App\Classes\MasterController;
+use App\Classes\BankApi;
 use App\Invoice;
 use App\Receiver;
 use App\Http\Controllers\InvoiceController;
@@ -23,8 +23,7 @@ class ApiInvoiceController extends BaseController
         ], 200);
     }
 
-
-    public function showInvoices (Request $request, Helper $helper){
+    public function showInvoices (Request $request, MasterController $helper){
 
         $results = $helper->showInvoices($request);
         return response()->json([
@@ -33,7 +32,7 @@ class ApiInvoiceController extends BaseController
     }
 
 
-    public function saveInvoice(Request $request, Helper $helper)
+    public function saveInvoice(Request $request, MasterController $helper)
     {
         $helper->saveInvoice($request);
         return response()->json([
@@ -42,7 +41,7 @@ class ApiInvoiceController extends BaseController
 
     }
 
-    public function payInvoices(Helper $helper)
+    public function payInvoices(MasterController $helper)
     {
         $results = $helper->payInvoices();
         return response()->json([

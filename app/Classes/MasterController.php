@@ -3,11 +3,12 @@
 
 namespace App\Classes;
 
+use App\Classes\BankApi;
 use App\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class Helper
+class MasterController
 {
 
 
@@ -44,7 +45,8 @@ class Helper
         $token = env("PAYMENT_API_TOKEN");
         $results = [];
         foreach ($unpaidInvoices as $unpaidInvoice) {
-            array_push($results, Payment::pay($token, $unpaidInvoice->receiver->sheba, $unpaidInvoice->amount));
+            $paid = BankApi::pay($token, $unpaidInvoice->receiver->sheba, $unpaidInvoice->amount, $lang="fa");
+            array_push($results, $paid);
             $unpaidInvoice->update(['paid' => "1"]);
         };
 

@@ -46,7 +46,6 @@ class PayInvoices extends Command
         $token = env("PAYMENT_API_TOKEN");
 
 
-
         if (empty($unpaidInvoices[0])) {
             $this->info("No unpaid invoices was found!");
         } else {
