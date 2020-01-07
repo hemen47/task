@@ -23,7 +23,8 @@ class ApiInvoiceController extends BaseController
         ], 200);
     }
 
-    public function showInvoices (Request $request, MasterController $helper){
+    public function showInvoices(Request $request, MasterController $helper)
+    {
 
         $results = $helper->showInvoices($request);
         return response()->json([
@@ -42,10 +43,28 @@ class ApiInvoiceController extends BaseController
     }
 
     public function payInvoices(MasterController $helper)
+
     {
-        $results = $helper->payInvoices();
+
+        $Invoices = Invoice::where('paid', false)->with('receiver')->get();
+        $meli=[];
+        $melat=[];
+
+        foreach ($Invoices as $key => $Invoice) {
+            $trim = substr($Invoice->receiver->sheba, 2, -19);
+            if ($trim == "00000") {
+                array_push($meli,$Invoice->id);
+
+            } else if ($trim == "11111"){
+                array_push($melat,$Invoice->id);
+        }else {
+                return "invalid sheba";
+            }
+        }
+
         return response()->json([
-            "results" => $results,
+            "meli" => $meli,
+            "melat" => $melat
         ], 200);
     }
 }

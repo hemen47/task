@@ -41,28 +41,33 @@ class MasterController
 
     public function payInvoices()
     {
-        $unpaidInvoices = Invoice::where('paid', false)->with('receiver')->get();
-        $token = env("PAYMENT_API_TOKEN");
-        $results = [];
-        foreach ($unpaidInvoices as $unpaidInvoice) {
-            $paid = BankApi::pay($token, $unpaidInvoice->receiver->sheba, $unpaidInvoice->amount, $lang="fa");
-            array_push($results, $paid);
-            $unpaidInvoice->update(['paid' => "1"]);
-        };
 
-        if (empty($results)) {
-            return $results = [0 => "هیچ فاکتوری پرداخت نشده ای وجود ندارد!"];
-        }else {
 
-         return $results;
-        }
+
+//        $results = [];
+//
+//        foreach ($unpaidInvoices as $unpaidInvoice) {
+//            $paid = BankApi::pay($unpaidInvoice->receiver->sheba, $unpaidInvoice->amount, $lang="fa");
+//            array_push($results, $paid);
+//            $unpaidInvoice->update(['paid' => "1"]);
+//        };
+//
+//        if (empty($results)) {
+//            return $results = [0 => "هیچ فاکتوری پرداخت نشده ای وجود ندارد!"];
+//        }else {
+//
+//         return $results;
+//        }
+        return null;
     }
 
-    public function showInvoices(Request $request) {
-        if($request->paid == "true") {
-            $invoices = Invoice::where('paid',true)->with('receiver')->get();
-        } else if($request->paid == "false"){
-            $invoices = Invoice::where('paid',false)->with('receiver')->get();
+
+    public function showInvoices(Request $request)
+    {
+        if ($request->paid == "true") {
+            $invoices = Invoice::where('paid', true)->with('receiver')->get();
+        } else if ($request->paid == "false") {
+            $invoices = Invoice::where('paid', false)->with('receiver')->get();
         } else
             $invoices = Invoice::with('receiver')->get();
         return $invoices;

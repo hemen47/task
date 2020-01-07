@@ -43,7 +43,6 @@ class PayInvoices extends Command
     {
 
         $unpaidInvoices = Invoice::where('paid', false)->with('receiver')->get();
-        $token = env("PAYMENT_API_TOKEN");
 
 
         if (empty($unpaidInvoices[0])) {
@@ -53,7 +52,7 @@ class PayInvoices extends Command
             $bar = $this->output->createProgressBar(count($unpaidInvoices));
 
             foreach ($unpaidInvoices as $unpaidInvoice) {
-                $this->info(Payment::pay($token, $unpaidInvoice->receiver->sheba, $unpaidInvoice->amount, $lang ="en"));
+                $this->info(Payment::pay($unpaidInvoice->receiver->sheba, $unpaidInvoice->amount, $lang ="en"));
                 $unpaidInvoice->update(['paid' => "1"]);
                 $bar->advance();
             };
