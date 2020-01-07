@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Helper;
 use App\Classes\Payment;
 use App\Invoice;
 use App\Receiver;
@@ -20,64 +21,30 @@ class ApiInvoiceController extends BaseController
         return response()->json([
             "receivers" => $receivers,
         ], 200);
-
     }
 
 
-    public function showInvoices(Request $request)
-    {
+    public function showInvoices (Request $request, Helper $helper){
 
-        if ($request->paid == "true") {
-            $invoices = Invoice::where('paid', true)->with('receiver')->get();
-        } else if ($request->paid == "false") {
-            $invoices = Invoice::where('paid', false)->with('receiver')->get();
-        } else
-            $invoices = Invoice::with('receiver')->get();
+        $results = $helper->showInvoices($request);
         return response()->json([
-            "Invoices" => $invoices,
+            "Invoices" => $results,
         ], 200);
     }
 
 
-    public function saveInvoice(Request $request)
+    public function saveInvoice(Request $request, Helper $helper)
     {
-        $messages = [
-            'amount.required' => 'لطفا مبلغ را وارد کنید!',
-            'receiver.required' => 'لطفا گیرنده را وارد کنید!',
-            'description.required' => 'لطفا توضیحات وارد کنید!'
-        ];
-
-
-        Validator::make($request->all(),[
-            'amount' => 'required',
-            'receiver' => 'required',
-            'description' => 'required',
-        ], $messages)->validate();
-
-
-        $invoice = new Invoice;
-        $invoice->receiver_id = $request->receiver;
-        $invoice->amount = $request->amount;
-        $invoice->description = $request->description;
-        $invoice->paid = false;
-        $invoice->save();
-
+        $helper->saveInvoice($request);
         return response()->json([
-            "msg" => "با موفقیت ثبت شد",
+            "message" => "با موفقیت ثبت شد",
         ], 201);
 
     }
 
-    public function payInvoices()
+    public function payInvoices(Helper $helper)
     {
-        $unpaidInvoices = Invoice::where('paid', false)->with('receiver')->get();
-        $token = env("PAYMENT_API_TOKEN");
-        $results = [];
-        foreach ($unpaidInvoices as $unpaidInvoice) {
-            array_push($results, Payment::pay($token, $unpaidInvoice->receiver->sheba, $unpaidInvoice->amount));
-            $unpaidInvoice->update(['paid' => "1"]);
-        };
-
+        $results = $helper->payInvoices();
         return response()->json([
             "results" => $results,
         ], 200);
