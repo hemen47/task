@@ -1,56 +1,70 @@
-@include('header')
+@extends('master')
 
-<body>
+@section('content')
+    <div class="text-center">
+        <button class="btn btn-primary">
+            <a class="text-white" href="http://127.0.0.1:8000/invoices">کل فاکتورها</a>
+        </button>
+        <button class="btn btn-danger">
+            <a class="text-white" href="http://127.0.0.1:8000/invoices?paid=false">پرداخت نشده</a>
+        </button>
+        <button class="btn btn-success">
+            <a class="text-white" href="http://127.0.0.1:8000/invoices?paid=true">پرداخت شده</a>
+        </button>
 
-<div class="container text-right rtl">
-    <div class="row mt-5">
-        <div class="col-lg-8 form">
-
-            <table class="table">
-                <thead>
+        <table class="table mt-3">
+            <thead>
+            <tr>
+                <th scope="col">شماره‌فاکتور</th>
+                <th scope="col">مبلغ</th>
+                <th scope="col">توضیحات</th>
+                <th scope="col">دریافت‌کننده</th>
+                <th scope="col">شبا</th>
+                <th scope="col">پرداخت‌‌‌‌‌شده</th>
+            </tr>
+            </thead>
+            @foreach($data as $d)
+                <tbody>
                 <tr>
-                    <th scope="col">شماره‌فاکتور</th>
-                    <th scope="col">مبلغ</th>
-                    <th scope="col">توضیحات</th>
-                    <th scope="col">دریافت‌کننده</th>
-                    <th scope="col">شبا</th>
-                    <th scope="col">موبایل</th>
+                    <th scope="row">{{$d->id}}</th>
+                    <td>{{$d->amount}}</td>
+                    <td>{{$d->description}}</td>
+                    <td>{{$d->receiver->name}}</td>
+                    <td>{{$d->receiver->sheba}}</td>
+                    <td>@if($d->paid)
+                            <span class="text-success">بله</span>
+                        @else
+                            <span class="text-danger">خیر</span>
+                        @endif
+                    </td>
                 </tr>
-                </thead>
-                @foreach($data as $d)
-                    <tbody>
-                    <tr>
-                        <th scope="row">{{$d->id}}</th>
-                        <td>{{$d->amount}}</td>
-                        <td>{{$d->description}}</td>
-                        <td>{{$d->receiver->name}}</td>
-                        <td>{{$d->receiver->sheba}}</td>
-                        <td>{{$d->receiver->number}}</td>
-                    </tr>
-                    </tbody>
-                @endforeach
-            </table>
+                </tbody>
+            @endforeach
+        </table>
+        <div class="text-center border-top">
+            <h5 class="m-4">مبلغ کل فاکتورها: {{$data->sum('amount')}}</h5>
+        </div>
+        <div id="payContainer" style="display:none">
 
             <form action="/pay" method="post" enctype="multipart/form-data" class="text-center">
                 @csrf
                 <button type="submit" class="btn btn-primary mt-2">پرداخت گروهی</button>
             </form>
-
-            @if (Session::has('msg'))
-                <div class="alert alert-success mt-4">{{ Session::get('msg') }}</div>
-            @endif
-
-
         </div>
+
+
+        @if (Session::has('results'))
+            @foreach(Session::get('results') as $result)
+            <div class="alert alert-success mt-4">{{ $result }}</div>
+            @endforeach
+        @endif
+
+
     </div>
-</div>
-
-
-<script
-        src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
-</body>
-</html>
+    <script>
+        let parameter = window.location.search.substr(6)
+        if (parameter === "false") {
+            document.getElementById("payContainer").style.display = "block";
+        }
+    </script>
+@endsection

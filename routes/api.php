@@ -13,5 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('/', 'ApiInvoiceController@showForm');
+Route::post('/save', 'ApiInvoiceController@saveInvoice');
 
-Route::post('/form', 'ApiController@form');
+Route::get('/invoices', 'ApiInvoiceController@showInvoices');
+Route::post('/pay', 'ApiInvoiceController@payInvoices');
+
+

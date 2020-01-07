@@ -12,8 +12,8 @@
 */
 
 
-Route::get('/', 'Controller@welcome');
-Route::post('/form', 'Controller@form');
+Route::get('/', 'InvoiceController@showForm');
+Route::post('/save', 'InvoiceController@saveInvoice');
 
-Route::get('/invoices', 'Controller@index');
-Route::post('/pay', 'Controller@pay');
+Route::get('/invoices', 'InvoiceController@showInvoices');
+Route::post('/pay', 'InvoiceController@payInvoices');

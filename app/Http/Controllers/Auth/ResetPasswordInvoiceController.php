@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\InvoiceController;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
-class ResetPasswordController extends Controller
+class ResetPasswordInvoiceController extends InvoiceController
 {
     /*
     |--------------------------------------------------------------------------
-    | Password Reset Controller
+    | Password Reset InvoiceController
     |--------------------------------------------------------------------------
     |
     | This controller is responsible for handling password reset requests

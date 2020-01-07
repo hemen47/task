@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\InvoiceController;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 
-class VerificationController extends Controller
+class VerificationInvoiceController extends InvoiceController
 {
     /*
     |--------------------------------------------------------------------------
-    | Email Verification Controller
+    | Email Verification InvoiceController
     |--------------------------------------------------------------------------
     |
     | This controller is responsible for handling email verification for any
